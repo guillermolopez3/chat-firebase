@@ -34,7 +34,7 @@ class AuthMethod{
     }
   }
 
-  Future singOut(String mail, String pass) async{
+  Future singOut() async{
     try{
       _auth.signOut();
     }catch(e){

@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/widgets/widget.dart';
 
+import '../services/auth.dart';
+import '../services/auth.dart';
+import 'chat_room_screen.dart';
+import 'package:flutter_chat/services/database.dart';
+
 class SignUp extends StatefulWidget {
+  final Function toogle;
+
+  SignUp(this.toogle);
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
 
+  AuthMethod _auth = AuthMethod();
+  DataBaseMethod _dataBaseMethod = DataBaseMethod();
+  bool isLoading = false;
   final _key = GlobalKey<FormState>();
   TextEditingController userNameTextEditingController = TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
@@ -15,6 +26,20 @@ class _SignUpState extends State<SignUp> {
 
   signMeUp(){
     if(_key.currentState.validate()){
+      Map<String,String> userMapInfo = {
+        'name' : userNameTextEditingController.text,
+        'email': emailTextEditingController.text
+      };
+      setState(() {
+        isLoading = true;
+      });
+      _auth.signUpWithEmailAndPasswor(emailTextEditingController.text,
+        passwordTextEditingController.text
+      ).then((value){
+
+        _dataBaseMethod.uploadUserInfo(userMapInfo);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ChatRoom()));
+      });
 
     }
   }
@@ -23,7 +48,11 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarMain(context),
-      body:  SingleChildScrollView(
+      body: isLoading ?
+      Container(
+        child: Center(child: CircularProgressIndicator(),),
+      )
+      : SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height -50,
           alignment: Alignment.bottomCenter,
@@ -55,6 +84,7 @@ class _SignUpState extends State<SignUp> {
                          decoration: textInputDecoration('email')
                      ),
                      TextFormField(
+                         obscureText: true,
                          validator: (val){
                            return val.length > 6 ? null : 'Please Provide paswword 6+ characters';
                          },
@@ -113,11 +143,19 @@ class _SignUpState extends State<SignUp> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Already have account?', style: mediumTextStyle(),),
-                    Text('SignIn now', style:TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        decoration: TextDecoration.underline
-                    ),)
+                    GestureDetector(
+                      onTap: (){
+                        widget.toogle();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Text('SignIn now', style:TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            decoration: TextDecoration.underline
+                        ),),
+                      ),
+                    )
                   ],
                 ),
                 SizedBox(height: 50,)

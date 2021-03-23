@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat/widgets/widget.dart';
 
 class SignIn extends StatefulWidget {
+  final Function toogle;
+
+  SignIn(this.toogle);
   @override
   _SignInState createState() => _SignInState();
 }
@@ -72,11 +75,19 @@ class _SignInState extends State<SignIn> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Don´t have account?', style: mediumTextStyle(),),
-                    Text('Register now', style:TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      decoration: TextDecoration.underline
-                    ),)
+                    GestureDetector(
+                      onTap: (){
+                        widget.toogle();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Text('Register now', style:TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          decoration: TextDecoration.underline
+                        ),),
+                      ),
+                    )
                   ],
                 ),
                 SizedBox(height: 50,)
