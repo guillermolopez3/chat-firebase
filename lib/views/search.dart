@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/helper/constants.dart';
 import 'package:flutter_chat/services/database.dart';
+import 'package:flutter_chat/views/conversation_screen.dart';
 import 'package:flutter_chat/widgets/search_tiles.dart';
 
 import '../widgets/widget.dart';
@@ -16,17 +18,13 @@ class _SearchState extends State<Search> {
   TextEditingController _searchController = TextEditingController();
 
   QuerySnapshot _snapshot;
+
   initSearc(){
     _dataBaseMethod.getUserByUserName(_searchController.text).then((value) {
       setState(() {
         _snapshot = value;
       });
     });
-  }
-
-  createChatRoomAndStartConversation(String username){
-    //List<String> users = [username,];
-    //_dataBaseMethod.createChatRoom(chatRoomId, chatRoomMap)
   }
 
   Widget searchList(){

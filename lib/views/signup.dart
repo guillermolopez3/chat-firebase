@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/helper/helperfunctions.dart';
 import 'package:flutter_chat/widgets/widget.dart';
 
 import '../services/auth.dart';
@@ -17,6 +18,8 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
 
   AuthMethod _auth = AuthMethod();
+ 
+
   DataBaseMethod _dataBaseMethod = DataBaseMethod();
   bool isLoading = false;
   final _key = GlobalKey<FormState>();
@@ -30,13 +33,17 @@ class _SignUpState extends State<SignUp> {
         'name' : userNameTextEditingController.text,
         'email': emailTextEditingController.text
       };
+
+      HelperFunctions.saveUserNameSharedPreference(userNameTextEditingController.text);
+      HelperFunctions.saveEmailSharedPreference(emailTextEditingController.text);
+
       setState(() {
         isLoading = true;
       });
       _auth.signUpWithEmailAndPasswor(emailTextEditingController.text,
         passwordTextEditingController.text
       ).then((value){
-
+        HelperFunctions.saveUserLoggedInSharedPreference(true);
         _dataBaseMethod.uploadUserInfo(userMapInfo);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ChatRoom()));
       });
